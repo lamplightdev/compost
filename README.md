@@ -66,9 +66,57 @@ const CompostMixin = (parent) => {
 
 ### Where's the data binding?
 
-There is none. For simple, well structured components there's not always a need for data binding - turns out you can get a lot done with the standard DOM APIs (and it's the most efficient way to update the DOM). But if data binding is your thing, you can simply extend `CompostShadowBaseMixin` to include your data binding library of choice (I like [lit-html](https://github.com/Polymer/lit-html))
+There is none. For simple, well structured components there's not always a need for data binding - turns out you can get a lot done with the standard DOM APIs (and it's the most efficient way to update the DOM too). But if data binding is your thing, you can simply extend `CompostShadowBaseMixin` to include your data binding library of choice (I like [lit-html](https://github.com/Polymer/lit-html))
 
 ## Usage
+
+### CompostShadowMixin
+
+```html
+
+<x-app></x-app>
+
+<script>
+  class App extends CompostMixin(HTMLElement) {
+    render() {
+      return `
+        <style>
+          :host {
+            display: flex;
+            flex-direction: column;
+            max-width: 1280px;
+            margin: 0 auto;
+          }
+        </style>
+
+        <button class="button" id="buttonEat">Eat me</button>
+        <button class="button" id="buttonDrink">Drink me</button>
+        <button class="button" id="buttonClick">Click me</button>
+      `;
+    }
+  }
+
+  customElements.define('x-app', App);
+  
+  const app = document.querySelector('x-app');
+</script>
+```
+Your x-app component now has a shadow DOM with encapsulated CSS.
+
+> ```app.$s``` is a reference to the shadow DOM
+
+> ```app.$``` is equivalent to ```app.shadowRoot.querySelector```
+
+> ```app.$$``` is equivalent to ```app.shadowRoot.querySelectorAll```
+
+> ```app.$id``` is an object containing a mapping of all elements with their `id`
+
+
+### CompostPropertiesMixin
+
+### CompostEventsMixin
+
+### CompostRepeatMixin
 
 ## Examples
 
