@@ -1,0 +1,25 @@
+{
+  "name": "@lamplightdev/compost",
+  "version": "1.0.0",
+  "description": "A collection of Web Component mixins",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "karmatic"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lamplightdev/compost.git"
+  },
+  "author": "Chris Haynes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lamplightdev/compost/issues"
+  },
+  "homepage": "https://github.com/lamplightdev/compost#readme",
+  "devDependencies": {
+    "karmatic": "^1.0.6"
+  }
+}
