@@ -66,7 +66,7 @@ const CompostMixin = (parent) => {
 
 ### Where's the data binding?
 
-There is none. For simple, well structured components there's not always a need for data binding - turns out you can get a lot done with the standard DOM APIs (and it's the most efficient way to update the DOM too). But if data binding is your thing, you can simply extend `CompostShadowBaseMixin` to include your data binding library of choice (I like [lit-html](https://github.com/Polymer/lit-html))
+There is none. For simple, well structured components you may not need data binding - turns out you can get a lot done with the standard DOM APIs (and it's the most efficient way to update the DOM too). But if data binding is your thing, you can simply extend `CompostShadowBaseMixin` to include your data binding library of choice (I like [lit-html](https://github.com/Polymer/lit-html))
 
 ## Usage
 
@@ -97,22 +97,77 @@ There is none. For simple, well structured components there's not always a need 
   }
 
   customElements.define('x-app', App);
-  
+
   const app = document.querySelector('x-app');
 </script>
 ```
-Your x-app component now has a shadow DOM with encapsulated CSS.
+Implement a `render` method that returns a string - your x-app component now has a shadow DOM with encapsulated CSS. In addition:
 
-> ```app.$s``` is a reference to the shadow DOM
+> `app.$s` is a reference to the shadow DOM
 
-> ```app.$``` is equivalent to ```app.shadowRoot.querySelector```
+> `app.$` is equivalent to `app.shadowRoot.querySelector`
 
-> ```app.$$``` is equivalent to ```app.shadowRoot.querySelectorAll```
+> `app.$$` is equivalent to `app.shadowRoot.querySelectorAll`
 
-> ```app.$id``` is an object containing a mapping of all elements with their `id`
-
+> `app.$id` is an object containing a mapping of all elements with their `id`
 
 ### CompostPropertiesMixin
+
+```html
+
+<x-app></x-app>
+
+<script>
+  class App extends CompostMixin(HTMLElement) {
+    static get properties() {
+      return {
+        siteUsername: {
+          type: String,
+          value: 'lovelace',
+          reflectToAttribute: true,
+          observer: 'observeSiteUsername',
+        },
+      };
+    }
+
+    observeUser(oldValue, newValue) {
+      console.log(oldValue, newValue);
+    }
+  }
+</script>
+
+```
+
+Implement a static getter for `properties`, returning an object with the property name as the key, and the value an object containing:
+
+|Key|Type|Default|Required|
+|:--:|:--:|:--:|:--:|
+|**`type`**|`{String\|Number\|Boolean\|Array\|Object}`|`String`|No|
+|**`value`**|`{String\|Number\|Boolean\|Array\|Object\|null}`|`undefined`|No|
+|**`reflectToAttribute`**|`{true\|false}`|`false`|No|
+|**`observer`**|`{String}`|`undefined`|No|
+
+`type`
+
+The type of the property. Used when converting a property to an attribute, and vice-versa.
+
+For boolean properties, `true` is converted to an empty attribute, while `false` removes the attribute. The presence of an attribute sets the property to `true`.
+
+For array and object properties, the property is JSON stringified (`JSON.stringify`) when converting to an attribute, and JSON parsed (`JSON.parse`) when converting to a property.
+
+`value`
+
+The default value of the property if the property has not been initialised from an attribute, or the property was not set before the element was added to the DOM. If an attribute with a name matching the property name (converted to kebab-case) is present on the element this will always override the default.
+
+`reflectToAttribute`
+
+Whether the property should be reflected to an attribute with the same name. Camel cased property names (e.g. `siteUsername`) are converted to kebab cased attribute names (e.g. `site-username`) automatically.
+
+`observer`
+
+If defined, this is the name of a method in your class that will be called when the property changes with arguments containing the previous and new values. Strict equality is used when comparing old and new values, so changes in object sub properties (e.g. `a.b`) won't trigger an observer - use of immutable data is advised.
+
+The observer will also be called on initialisation either from a matching attribute or a default `value`.
 
 ### CompostEventsMixin
 
