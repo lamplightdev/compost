@@ -10,18 +10,19 @@
 
 > A collection of small Web Component mixins to add commonly required functionality without the bloat
 
-- **No dependencies** just mixin and go
-- **Plain old JavaScript** no build tools required, compatible by default, debug in the browser with standard dev tools
-- **No magic** straight forward to understand
-- **Small & efficient** low overhead to keep your components lean
-- **Include only what you need** take it or leave it
-- **Cross browser** works on all modern browsers and IE11
+- **No dependencies** - just mixin and go
+- **Plain old JavaScript** - no build tools required, compatible by default, debug in the browser with standard dev tools
+- **No magic** - straight forward to understand
+- **Small & efficient** - low overhead to keep your components lean
+- **Include only what you need** - take it or leave it
+- **Cross browser** - works on all modern browsers and IE11
 
 ## Table of Contents
 
 - [Install](#install)
 - [Mixins](#mixins)
 - [Usage](#usage)
+- [Browser support](#browser-support)
 - [Examples](#examples)
 - [License](#license)
 
@@ -66,7 +67,7 @@ const CompostMixin = (parent) => {
 
 ### Where's the data binding?
 
-There is none. For simple, well structured components you may not need data binding - turns out you can get a lot done with the standard DOM APIs (and it's the most efficient way to update the DOM too). But if data binding is your thing, you can simply extend `CompostShadowBaseMixin` to include your data binding library of choice (I like [lit-html](https://github.com/Polymer/lit-html))
+There is none. For simple, well structured components you may not need data binding - turns out you can get a lot done with the standard DOM APIs (and it's the most efficient way to update the DOM too). But if data binding is your thing you can simply extend `CompostShadowBaseMixin` to include your data binding library of choice (I like [lit-html](https://github.com/Polymer/lit-html).)
 
 ## Usage
 
@@ -163,9 +164,9 @@ Whether the property should be reflected to an attribute with the same name. Cam
 
 `observer`
 
-If defined, this is the name of a method in your class that will be called when the property changes with arguments containing the previous and new values. Strict equality is used when comparing old and new values, so changes in object sub properties (e.g. `a.b`) won't trigger an observer - use of immutable data is advised.
+If defined, this is the name of a method in your class that will be called when the property changes with arguments containing the previous and new values. Strict equality is used when comparing old and new values, so changes in object sub properties or array elements won't trigger an observer - use of immutable data is advised.
 
-The observer will also be called on initialisation either from a matching attribute or a default `value`.
+The observer will also be called on initialisation - either from a matching attribute or a default `value`.
 
 ### CompostEventsMixin
 
@@ -247,15 +248,23 @@ The first argument to `render` is anything that needs to be in the element's sha
 <button>three</button>
 ```
 
-`this.getKey(value, index)` must return a unique key for each `value` in `items` so that items can be efficiently reordered when the items array changes.
+`this.getKey(value, index)` must return a unique key for each `value` in `items` so that items can be efficiently added/removed/reordered when the items array changes.
 
-`updateItem(el, value, index)` is used to update the repeated element when the values in `items` change.
+`updateItem(el, value, index)` is used to update the repeated element when the `value` in `items[index]` changes.
+
+## Browser support
+
+Works with no polyfills or build step for browsers that support ES2015, Shadow DOM v1, Custom Elements v1 and HTML Templates. This is currently the latest versions of Chrome and Safari.
+
+Works with other browsers down to IE11 when using the [web components polyfills](https://github.com/WebComponents/webcomponentsjs) and a transpilation step (e.g. Babel) as needed.
 
 ## Examples
 
 [HackerNew Progressive Wev App](https://compost-hn.netlify.com) -  built using compost
 
 Coming soon - an example using lit-html.
+
+Coming soon - an example that works on all browsers down to IE11.
 
 ## License
 
