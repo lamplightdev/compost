@@ -1,6 +1,6 @@
 {
   "name": "@lamplightdev/compost",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A collection of Web Component mixins",
   "main": "index.js",
   "scripts": {
