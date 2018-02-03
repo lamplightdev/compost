@@ -49,7 +49,7 @@ Let's you add declarative event binding in your templates. Also adds some conven
 
 ### CompostRepeatMixin
 
-Stamps out a template for each object in the `items` array property.
+Stamps out a template for each object in the `items` array property
 
 ### CompostMixin
 
@@ -73,7 +73,6 @@ There is none. For simple, well structured components you may not need data bind
 ### CompostShadowMixin
 
 ```html
-
 <x-app></x-app>
 
 <script>
@@ -97,26 +96,23 @@ There is none. For simple, well structured components you may not need data bind
   }
 
   customElements.define('x-app', App);
-
-  const app = document.querySelector('x-app');
 </script>
 ```
 Implement a `render` method that returns a string - your x-app component now has a shadow DOM with encapsulated CSS.
 
-In addition:
+In addition the following convenience properties are added:
 
-> `app.$s` is a reference to the shadow DOM
+`this.$s` is a reference to the shadow DOM
 
-> `app.$` is equivalent to `app.shadowRoot.querySelector`
+`this.$` is equivalent to `app.shadowRoot.querySelector`
 
-> `app.$$` is equivalent to `app.shadowRoot.querySelectorAll`
+`this.$$` is equivalent to `app.shadowRoot.querySelectorAll`
 
-> `app.$id` is an object containing a mapping of all elements with their `id`
+`this.$id` is an object containing a mapping of all elements with their `id`
 
 ### CompostPropertiesMixin
 
 ```html
-
 <x-app></x-app>
 
 <script>
@@ -174,7 +170,6 @@ The observer will also be called on initialisation either from a matching attrib
 ### CompostEventsMixin
 
 ```html
-
 <x-app></x-app>
 
 <script>
@@ -191,8 +186,6 @@ The observer will also be called on initialisation either from a matching attrib
   }
 
   customElements.define('x-app', App);
-
-  const app = document.querySelector('x-app');
 </script>
 ```
 
@@ -202,11 +195,11 @@ Event listeners are added in `connectedCallback` and removed in `disconnectedCal
 
 In addition the following convenience methods are added:
 
-> `this.on(el, type, func)` is equivalent to `el.addEventListener(type, func)`
+`this.on(el, type, func)` is equivalent to `el.addEventListener(type, func)`
 
-> `this.off(el, type, func)` is equivalent to `el.removeEventListener(type, func)`
+`this.off(el, type, func)` is equivalent to `el.removeEventListener(type, func)`
 
-> `this.fire(type, detail, bubbles = true, composed = true)` is equivalent to
+`this.fire(type, detail, bubbles = true, composed = true)` is equivalent to
 ```js
 this.dispatchEvent(new CustomEvent(type, {
   bubbles,
@@ -217,9 +210,52 @@ this.dispatchEvent(new CustomEvent(type, {
 
 ### CompostRepeatMixin
 
+```html
+<x-app></x-app>
+
+<script>
+  class App extends CompostRepeatMixin(CompostShadowMixin(HTMLElement)) {
+    render() {
+      return super.render(`
+        <h1>Repeater<h1>
+      `, `
+        <button></button>
+      `);
+    }
+
+    getKey(value, index) {
+      return value;
+    }
+
+    updateItem(el, value, index) {
+      el.textContent = value;
+    }
+  }
+
+  customElements.define('x-app', App);
+
+  const app = document.querySelector('x-app');
+  app.items = ['one', 'two', 'three'];
+</script>
+```
+
+The first argument to `render` is anything that needs to be in the element's shadow DOM (which is not repeated.) The second argument is the DOM  that needs to be repeated and is combined with the `items` array property to stamp out new elements in the light DOM. So the above will output a custom element with `<h1>Repeater</h1>` in the shadow DOM, and the following in a `slot`:
+
+```html
+<button>one</button>
+<button>two</button>
+<button>three</button>
+```
+
+`this.getKey(value, index)` must return a unique key for each `value` in `items` so that items can be efficiently reordered when the items array changes.
+
+`updateItem(el, value, index)` is used to update the repeated element when the values in `items` change.
+
 ## Examples
 
 [HackerNew Progressive Wev App](https://compost-hn.netlify.com) -  built using compost
+
+Coming soon - an example using lit-html.
 
 ## License
 
