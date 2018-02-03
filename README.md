@@ -77,7 +77,7 @@ There is none. For simple, well structured components you may not need data bind
 <x-app></x-app>
 
 <script>
-  class App extends CompostMixin(HTMLElement) {
+  class App extends CompostShadowMixin(HTMLElement) {
     render() {
       return `
         <style>
@@ -101,7 +101,9 @@ There is none. For simple, well structured components you may not need data bind
   const app = document.querySelector('x-app');
 </script>
 ```
-Implement a `render` method that returns a string - your x-app component now has a shadow DOM with encapsulated CSS. In addition:
+Implement a `render` method that returns a string - your x-app component now has a shadow DOM with encapsulated CSS.
+
+In addition:
 
 > `app.$s` is a reference to the shadow DOM
 
@@ -118,7 +120,7 @@ Implement a `render` method that returns a string - your x-app component now has
 <x-app></x-app>
 
 <script>
-  class App extends CompostMixin(HTMLElement) {
+  class App extends CompostPropertiesMixin(HTMLElement) {
     static get properties() {
       return {
         siteUsername: {
@@ -170,6 +172,48 @@ If defined, this is the name of a method in your class that will be called when 
 The observer will also be called on initialisation either from a matching attribute or a default `value`.
 
 ### CompostEventsMixin
+
+```html
+
+<x-app></x-app>
+
+<script>
+  class App extends CompostEventsMixin(CompostShadowMixin(HTMLElement)) {
+    render() {
+      return `
+        <button on-click="test">Click me</button>
+      `;
+    }
+
+    test(event) {
+      console.log(this, event);
+    }
+  }
+
+  customElements.define('x-app', App);
+
+  const app = document.querySelector('x-app');
+</script>
+```
+
+Any attribute beginning `on-{eventName}` (where eventName is one of [these standard DOM events](https://github.com/lamplightdev/compost/blob/86a15dd693112e6a6433a6262270f29a0869b5a3/src/events-mixin.js#L4)) will bind that event to the method specified in the attribute value (`test` in the example above.) The method is automatically bound to the current class, so `this` in the method will always refer to the class itself.
+
+Event listeners are added in `connectedCallback` and removed in `disconnectedCallback`.
+
+In addition the following convenience methods are added:
+
+> `this.on(el, type, func)` is equivalent to `el.addEventListener(type, func)`
+
+> `this.off(el, type, func)` is equivalent to `el.removeEventListener(type, func)`
+
+> `this.fire(type, detail, bubbles = true, composed = true)` is equivalent to
+```js
+this.dispatchEvent(new CustomEvent(type, {
+  bubbles,
+  composed,
+  detail,
+}));
+```
 
 ### CompostRepeatMixin
 
