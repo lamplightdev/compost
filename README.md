@@ -11,7 +11,7 @@
 > A collection of small Web Component mixins to add commonly required functionality without the bloat
 
 - **No dependencies** - just mixin and go
-- **Plain old JavaScript** - no build tools required, compatible by default, debug in the browser with standard dev tools
+- **Plain JavaScript** - no build tools required, compatible by default, debug in the browser with standard dev tools
 - **No magic** - straight forward to understand
 - **Small & efficient** - low overhead to keep your components lean
 - **Include only what you need** - take it or leave it
@@ -260,7 +260,7 @@ Works with other browsers down to IE11 when using the [web components polyfills]
 
 ## Examples
 
-[HackerNew Progressive Wev App](https://compost-hn.netlify.com) -  built using compost
+[HackerNew Progressive Web App](https://compost-hn.netlify.com) -  built using compost
 
 Coming soon - an example using lit-html.
 
