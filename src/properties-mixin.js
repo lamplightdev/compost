@@ -90,12 +90,18 @@ const CompostPropertiesMixin = (parent) => {
     set(propName, value) {
       const oldValue = this._props[propName];
 
-      this._props[propName] = value;
+      switch (this.constructor.properties[propName].type) {
+        case Number:
+          this._props[propName] = Number(value);
+          break;
+        default:
+          this._props[propName] = value;
+          break;
+      }
 
       if (oldValue !== this[propName]) {
         if (this.constructor.properties[propName].reflectToAttribute) {
           const attributeName = this._propsToAttrs[propName];
-
 
           if (this[propName] === null) {
             this.removeAttribute(attributeName);
