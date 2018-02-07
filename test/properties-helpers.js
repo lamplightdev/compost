@@ -1,16 +1,20 @@
-export const canSetDefaultProperties = (context) => {
+export const canSetDefaultProperties = (context, done) => {
   context.appEl.appendChild(context.testEl);
 
   const el = document.getElementById('test');
 
-  expect(el.username).toBe(el.constructor.properties.username.value);
-  expect(el.signinAttempts).toBe(el.constructor.properties.signinAttempts.value);
-  expect(el.valid).toBe(el.constructor.properties.valid.value);
-  expect(el.items).toEqual(el.constructor.properties.items.value);
-  expect(el.info).toEqual(el.constructor.properties.info.value);
+  requestAnimationFrame(() => {
+    expect(el.username).toBe(el.constructor.properties.username.value);
+    expect(el.signinAttempts).toBe(el.constructor.properties.signinAttempts.value);
+    expect(el.valid).toBe(el.constructor.properties.valid.value);
+    expect(el.items).toEqual(el.constructor.properties.items.value);
+    expect(el.info).toEqual(el.constructor.properties.info.value);
+
+    done();
+  });
 };
 
-export const canSetStringProperty = (context, append = true) => {
+export const canSetStringProperty = (context, done, append = true) => {
   context.testEl[context.propName] = context.value;
 
   if (append) {
@@ -22,13 +26,17 @@ export const canSetStringProperty = (context, append = true) => {
   const attrName = el.constructor.propertyNameToAttributeName(context.propName);
   const observerName = el.constructor.properties[context.propName].observer;
 
-  expect(el[context.propName]).toBe(context.value);
-  expect(el.getAttribute(attrName)).toBe(context.value);
-  expect(el[observerName].calls.count()).toBe(1);
-  expect(el[observerName]).toHaveBeenCalledWith(context.previousValue, context.value);
+  requestAnimationFrame(() => {
+    expect(el[context.propName]).toBe(context.value);
+    expect(el.getAttribute(attrName)).toBe(context.value);
+    expect(el[observerName].calls.count()).toBe(1);
+    expect(el[observerName]).toHaveBeenCalledWith(context.previousValue, context.value);
+
+    done();
+  });
 };
 
-export const canSetNumberProperty = (context, append = true) => {
+export const canSetNumberProperty = (context, done, append = true) => {
   context.testEl[context.propName] = context.value;
 
   if (append) {
@@ -39,13 +47,17 @@ export const canSetNumberProperty = (context, append = true) => {
   const attrName = el.constructor.propertyNameToAttributeName(context.propName);
   const observerName = el.constructor.properties[context.propName].observer;
 
-  expect(el[context.propName]).toBe(context.value);
-  expect(el.getAttribute(attrName)).toBe(`${context.value}`);
-  expect(el[observerName].calls.count()).toBe(1);
-  expect(el[observerName]).toHaveBeenCalledWith(context.previousValue, context.value);
+  requestAnimationFrame(() => {
+    expect(el[context.propName]).toBe(context.value);
+    expect(el.getAttribute(attrName)).toBe(`${context.value}`);
+    expect(el[observerName].calls.count()).toBe(1);
+    expect(el[observerName]).toHaveBeenCalledWith(context.previousValue, context.value);
+
+    done();
+  });
 };
 
-export const canSetBooleanProperty = (context, append = true) => {
+export const canSetBooleanProperty = (context, done, append = true) => {
   context.testEl[context.propName] = context.value;
 
   if (append) {
@@ -56,13 +68,17 @@ export const canSetBooleanProperty = (context, append = true) => {
   const attrName = el.constructor.propertyNameToAttributeName(context.propName);
   const observerName = el.constructor.properties[context.propName].observer;
 
-  expect(el[context.propName]).toBe(context.value);
-  expect(el.hasAttribute(attrName)).toBe(context.value);
-  expect(el[observerName].calls.count()).toBe(1);
-  expect(el[observerName]).toHaveBeenCalledWith(context.previousValue, context.value);
+  requestAnimationFrame(() => {
+    expect(el[context.propName]).toBe(context.value);
+    expect(el.hasAttribute(attrName)).toBe(context.value);
+    expect(el[observerName].calls.count()).toBe(1);
+    expect(el[observerName]).toHaveBeenCalledWith(context.previousValue, context.value);
+
+    done();
+  });
 };
 
-export const canSetArrayProperty = (context, append = true) => {
+export const canSetArrayProperty = (context, done, append = true) => {
   context.testEl[context.propName] = context.value;
 
   if (append) {
@@ -73,13 +89,17 @@ export const canSetArrayProperty = (context, append = true) => {
   const attrName = el.constructor.propertyNameToAttributeName(context.propName);
   const observerName = el.constructor.properties[context.propName].observer;
 
-  expect(el[context.propName]).toBe(context.value);
-  expect(el.getAttribute(attrName)).toBe(JSON.stringify(context.value));
-  expect(el[observerName].calls.count()).toBe(1);
-  expect(el[observerName]).toHaveBeenCalledWith(context.previousValue, context.value);
+  requestAnimationFrame(() => {
+    expect(el[context.propName]).toBe(context.value);
+    expect(el.getAttribute(attrName)).toBe(JSON.stringify(context.value));
+    expect(el[observerName].calls.count()).toBe(1);
+    expect(el[observerName]).toHaveBeenCalledWith(context.previousValue, context.value);
+
+    done();
+  });
 };
 
-export const canSetObjectProperty = (context, append = true) => {
+export const canSetObjectProperty = (context, done, append = true) => {
   context.testEl[context.propName] = context.value;
 
   if (append) {
@@ -90,13 +110,17 @@ export const canSetObjectProperty = (context, append = true) => {
   const attrName = el.constructor.propertyNameToAttributeName(context.propName);
   const observerName = el.constructor.properties[context.propName].observer;
 
-  expect(el[context.propName]).toBe(context.value);
-  expect(el.getAttribute(attrName)).toBe(JSON.stringify(context.value));
-  expect(el[observerName].calls.count()).toBe(1);
-  expect(el[observerName]).toHaveBeenCalledWith(context.previousValue, context.value);
+  requestAnimationFrame(() => {
+    expect(el[context.propName]).toBe(context.value);
+    expect(el.getAttribute(attrName)).toBe(JSON.stringify(context.value));
+    expect(el[observerName].calls.count()).toBe(1);
+    expect(el[observerName]).toHaveBeenCalledWith(context.previousValue, context.value);
+
+    done();
+  });
 };
 
-export const canSetStringPropertyFromAttribute = (context) => {
+export const canSetStringPropertyFromAttribute = (context, done) => {
   const attrName = context.testEl.constructor.propertyNameToAttributeName(context.propName);
 
   context.testEl.setAttribute(attrName, context.value);
@@ -105,13 +129,17 @@ export const canSetStringPropertyFromAttribute = (context) => {
 
   const observerName = el.constructor.properties[context.propName].observer;
 
-  expect(el[context.propName]).toBe(context.value);
-  expect(el.getAttribute(attrName)).toBe(context.value);
-  expect(el[observerName].calls.count()).toBe(1);
-  expect(el[observerName]).toHaveBeenCalledWith(context.previousValue, context.value);
+  requestAnimationFrame(() => {
+    expect(el[context.propName]).toBe(context.value);
+    expect(el.getAttribute(attrName)).toBe(context.value);
+    expect(el[observerName].calls.count()).toBe(1);
+    expect(el[observerName]).toHaveBeenCalledWith(context.previousValue, context.value);
+
+    done();
+  });
 };
 
-export const canSetNumberPropertyFromAttribute = (context) => {
+export const canSetNumberPropertyFromAttribute = (context, done) => {
   const attrName = context.testEl.constructor.propertyNameToAttributeName(context.propName);
 
   context.testEl.setAttribute(attrName, context.value);
@@ -120,13 +148,17 @@ export const canSetNumberPropertyFromAttribute = (context) => {
 
   const observerName = el.constructor.properties[context.propName].observer;
 
-  expect(el[context.propName]).toBe(context.value);
-  expect(el.getAttribute(attrName)).toBe(`${context.value}`);
-  expect(el[observerName].calls.count()).toBe(1);
-  expect(el[observerName]).toHaveBeenCalledWith(context.previousValue, context.value);
+  requestAnimationFrame(() => {
+    expect(el[context.propName]).toBe(context.value);
+    expect(el.getAttribute(attrName)).toBe(`${context.value}`);
+    expect(el[observerName].calls.count()).toBe(1);
+    expect(el[observerName]).toHaveBeenCalledWith(context.previousValue, context.value);
+
+    done();
+  });
 };
 
-export const canSetBooleanPropertyFromAttribute = (context) => {
+export const canSetBooleanPropertyFromAttribute = (context, done) => {
   const attrName = context.testEl.constructor.propertyNameToAttributeName(context.propName);
 
   if (context.value) {
@@ -139,13 +171,17 @@ export const canSetBooleanPropertyFromAttribute = (context) => {
 
   const observerName = el.constructor.properties[context.propName].observer;
 
-  expect(el[context.propName]).toBe(context.value);
-  expect(el.hasAttribute(attrName)).toBe(context.value);
-  expect(el[observerName].calls.count()).toBe(1);
-  expect(el[observerName]).toHaveBeenCalledWith(context.previousValue, context.value);
+  requestAnimationFrame(() => {
+    expect(el[context.propName]).toBe(context.value);
+    expect(el.hasAttribute(attrName)).toBe(context.value);
+    expect(el[observerName].calls.count()).toBe(1);
+    expect(el[observerName]).toHaveBeenCalledWith(context.previousValue, context.value);
+
+    done();
+  });
 };
 
-export const canSetArrayPropertyFromAttribute = (context) => {
+export const canSetArrayPropertyFromAttribute = (context, done) => {
   const attrName = context.testEl.constructor.propertyNameToAttributeName(context.propName);
 
   context.testEl.setAttribute(attrName, JSON.stringify(context.value));
@@ -154,13 +190,17 @@ export const canSetArrayPropertyFromAttribute = (context) => {
 
   const observerName = el.constructor.properties[context.propName].observer;
 
-  expect(el[context.propName]).toEqual(context.value);
-  expect(el.getAttribute(attrName)).toBe(JSON.stringify(context.value));
-  expect(el[observerName].calls.count()).toBe(1);
-  expect(el[observerName]).toHaveBeenCalledWith(context.previousValue, context.value);
+  requestAnimationFrame(() => {
+    expect(el[context.propName]).toEqual(context.value);
+    expect(el.getAttribute(attrName)).toBe(JSON.stringify(context.value));
+    expect(el[observerName].calls.count()).toBe(1);
+    expect(el[observerName]).toHaveBeenCalledWith(context.previousValue, context.value);
+
+    done();
+  });
 };
 
-export const canSetObjectPropertyFromAttribute = (context) => {
+export const canSetObjectPropertyFromAttribute = (context, done) => {
   const attrName = context.testEl.constructor.propertyNameToAttributeName(context.propName);
 
   context.testEl.setAttribute(attrName, JSON.stringify(context.value));
@@ -169,8 +209,12 @@ export const canSetObjectPropertyFromAttribute = (context) => {
 
   const observerName = el.constructor.properties[context.propName].observer;
 
-  expect(el[context.propName]).toEqual(context.value);
-  expect(el.getAttribute(attrName)).toBe(JSON.stringify(context.value));
-  expect(el[observerName].calls.count()).toBe(1);
-  expect(el[observerName]).toHaveBeenCalledWith(context.previousValue, context.value);
+  requestAnimationFrame(() => {
+    expect(el[context.propName]).toEqual(context.value);
+    expect(el.getAttribute(attrName)).toBe(JSON.stringify(context.value));
+    expect(el[observerName].calls.count()).toBe(1);
+    expect(el[observerName]).toHaveBeenCalledWith(context.previousValue, context.value);
+
+    done();
+  });
 };

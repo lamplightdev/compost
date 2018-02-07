@@ -95,7 +95,7 @@ const CompostPropertiesMixin = (parent) => {
 
       switch (this.constructor.properties[propName].type) {
         case Number:
-          this._props[propName] = Number(value);
+          this._props[propName] = value === null ? null : Number(value);
           break;
         default:
           this._props[propName] = value;

@@ -20,39 +20,39 @@ export default function () {
         this.appEl.innerHTML = '';
       });
 
-      it('can set default properties', function () {
-        Helpers.canSetDefaultProperties(this);
+      it('can set default properties', function (done) {
+        Helpers.canSetDefaultProperties(this, done);
       });
 
-      it('can set string property before append', function () {
+      it('can set string property before append', function (done) {
         this.propName = 'username';
         this.value = 'Chris';
         this.previousValue = undefined;
-        Helpers.canSetStringProperty(this);
+        Helpers.canSetStringProperty(this, done);
       });
 
-      it('can set number property before append', function () {
+      it('can set number property before append', function (done) {
         this.propName = 'signinAttempts';
         this.value = 10;
         this.previousValue = undefined;
-        Helpers.canSetNumberProperty(this);
+        Helpers.canSetNumberProperty(this, done);
       });
 
-      it('can set boolean property before append', function () {
+      it('can set boolean property before append', function (done) {
         this.propName = 'valid';
         this.value = false;
         this.previousValue = undefined;
-        Helpers.canSetBooleanProperty(this);
+        Helpers.canSetBooleanProperty(this, done);
       });
 
-      it('can set array property before append', function () {
+      it('can set array property before append', function (done) {
         this.propName = 'items';
         this.value = ['a', 'b', 'c'];
         this.previousValue = undefined;
-        Helpers.canSetArrayProperty(this);
+        Helpers.canSetArrayProperty(this, done);
       });
 
-      it('can set object property before append', function () {
+      it('can set object property before append', function (done) {
         this.propName = 'info';
         this.value = {
           x: 'a',
@@ -60,7 +60,7 @@ export default function () {
           z: 'c',
         };
         this.previousValue = undefined;
-        Helpers.canSetObjectProperty(this);
+        Helpers.canSetObjectProperty(this, done);
       });
     });
 
@@ -74,39 +74,39 @@ export default function () {
         this.appEl.innerHTML = '';
       });
 
-      it('can set default properties', function () {
-        Helpers.canSetDefaultProperties(this);
+      it('can set default properties', function (done) {
+        Helpers.canSetDefaultProperties(this, done);
       });
 
-      it('can set string property before append', function () {
+      it('can set string property before append', function (done) {
         this.propName = 'username';
         this.value = 'Chris';
         this.previousValue = undefined;
-        Helpers.canSetStringProperty(this);
+        Helpers.canSetStringProperty(this, done);
       });
 
-      it('can set number property before append', function () {
+      it('can set number property before append', function (done) {
         this.propName = 'signinAttempts';
         this.value = 10;
         this.previousValue = undefined;
-        Helpers.canSetNumberProperty(this);
+        Helpers.canSetNumberProperty(this, done);
       });
 
-      it('can set boolean property before append', function () {
+      it('can set boolean property before append', function (done) {
         this.propName = 'valid';
         this.value = false;
         this.previousValue = undefined;
-        Helpers.canSetBooleanProperty(this);
+        Helpers.canSetBooleanProperty(this, done);
       });
 
-      it('can set array property before append', function () {
+      it('can set array property before append', function (done) {
         this.propName = 'items';
         this.value = ['a', 'b', 'c'];
         this.previousValue = undefined;
-        Helpers.canSetArrayProperty(this);
+        Helpers.canSetArrayProperty(this, done);
       });
 
-      it('can set object property before append', function () {
+      it('can set object property before append', function (done) {
         this.propName = 'info';
         this.value = {
           x: 'a',
@@ -114,7 +114,7 @@ export default function () {
           z: 'c',
         };
         this.previousValue = undefined;
-        Helpers.canSetObjectProperty(this);
+        Helpers.canSetObjectProperty(this, done);
       });
     });
 
@@ -123,14 +123,14 @@ export default function () {
         this.appEl.innerHTML = '';
       });
 
-      it('can set default properties', function () {
+      it('can set default properties', function (done) {
         const str = `<${this.elName} id="test"></${this.elName}>`;
         this.appEl.innerHTML = str;
         this.testEl = document.getElementById('test');
-        Helpers.canSetDefaultProperties(this, false);
+        Helpers.canSetDefaultProperties(this, done, false);
       });
 
-      it('can initialise string property from attribute', function () {
+      it('can initialise string property from attribute', function (done) {
         const value = 'Dave';
         const propName = 'username';
         const attrName = this.customEl.propertyNameToAttributeName(propName);
@@ -141,13 +141,17 @@ export default function () {
 
         const el = document.getElementById('test');
 
-        expect(el[propName]).toBe(value);
-        expect(el.getAttribute(attrName)).toBe(value);
-        expect(el[observerName].calls.count()).toBe(1);
-        expect(el[observerName]).toHaveBeenCalledWith(undefined, value);
+        requestAnimationFrame(() => {
+          expect(el[propName]).toBe(value);
+          expect(el.getAttribute(attrName)).toBe(value);
+          expect(el[observerName].calls.count()).toBe(1);
+          expect(el[observerName]).toHaveBeenCalledWith(undefined, value);
+
+          done();
+        });
       });
 
-      it('can initialise number property from attribute', function () {
+      it('can initialise number property from attribute', function (done) {
         const value = 100;
         const propName = 'signinAttempts';
         const attrName = this.customEl.propertyNameToAttributeName(propName);
@@ -158,13 +162,17 @@ export default function () {
 
         const el = document.getElementById('test');
 
-        expect(el[propName]).toBe(value);
-        expect(el.getAttribute(attrName)).toBe(`${value}`);
-        expect(el[observerName].calls.count()).toBe(1);
-        expect(el[observerName]).toHaveBeenCalledWith(undefined, value);
+        requestAnimationFrame(() => {
+          expect(el[propName]).toBe(value);
+          expect(el.getAttribute(attrName)).toBe(`${value}`);
+          expect(el[observerName].calls.count()).toBe(1);
+          expect(el[observerName]).toHaveBeenCalledWith(undefined, value);
+
+          done();
+        });
       });
 
-      it('can initialise boolean property from attribute', function () {
+      it('can initialise boolean property from attribute', function (done) {
         const value = true;
         const propName = 'valid';
         const attrName = this.customEl.propertyNameToAttributeName(propName);
@@ -175,13 +183,17 @@ export default function () {
 
         const el = document.getElementById('test');
 
-        expect(el[propName]).toBe(value);
-        expect(el.hasAttribute(attrName)).toBe(value);
-        expect(el[observerName].calls.count()).toBe(1);
-        expect(el[observerName]).toHaveBeenCalledWith(undefined, value);
+        requestAnimationFrame(() => {
+          expect(el[propName]).toBe(value);
+          expect(el.hasAttribute(attrName)).toBe(value);
+          expect(el[observerName].calls.count()).toBe(1);
+          expect(el[observerName]).toHaveBeenCalledWith(undefined, value);
+
+          done();
+        });
       });
 
-      it('can initialise array property from attribute', function () {
+      it('can initialise array property from attribute', function (done) {
         const value = ['d', 'e', 'f'];
         const propName = 'items';
         const attrName = this.customEl.propertyNameToAttributeName(propName);
@@ -192,13 +204,17 @@ export default function () {
 
         const el = document.getElementById('test');
 
-        expect(el[propName]).toEqual(value);
-        expect(el.getAttribute(attrName)).toBe(JSON.stringify(value));
-        expect(el[observerName].calls.count()).toBe(1);
-        expect(el[observerName]).toHaveBeenCalledWith(undefined, value);
+        requestAnimationFrame(() => {
+          expect(el[propName]).toEqual(value);
+          expect(el.getAttribute(attrName)).toBe(JSON.stringify(value));
+          expect(el[observerName].calls.count()).toBe(1);
+          expect(el[observerName]).toHaveBeenCalledWith(undefined, value);
+
+          done();
+        });
       });
 
-      it('can initialise object property from attribute', function () {
+      it('can initialise object property from attribute', function (done) {
         const value = { a: [], b: true };
         const propName = 'info';
         const attrName = this.customEl.propertyNameToAttributeName(propName);
@@ -209,10 +225,14 @@ export default function () {
 
         const el = document.getElementById('test');
 
-        expect(el[propName]).toEqual(value);
-        expect(el.getAttribute(attrName)).toBe(JSON.stringify(value));
-        expect(el[observerName].calls.count()).toBe(1);
-        expect(el[observerName]).toHaveBeenCalledWith(undefined, value);
+        requestAnimationFrame(() => {
+          expect(el[propName]).toEqual(value);
+          expect(el.getAttribute(attrName)).toBe(JSON.stringify(value));
+          expect(el[observerName].calls.count()).toBe(1);
+          expect(el[observerName]).toHaveBeenCalledWith(undefined, value);
+
+          done();
+        });
       })
     });
   });
