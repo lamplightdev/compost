@@ -168,6 +168,8 @@ If defined, this is the name of a method in your class that will be called when 
 
 The observer will also be called on initialisation - either from a matching attribute or a default `value`.
 
+Observer calls are batched and dispatched asynchronously. This means that when the observers are called all properties will have their most recent values - so the order in which the observers are should not be important.
+
 ### CompostEventsMixin
 
 ```html
