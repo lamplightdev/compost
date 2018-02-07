@@ -1,3 +1,6 @@
+let setStack = {};
+let stackIndex = 0;
+
 const CompostPropertiesMixin = (parent) => {
   return class extends parent {
     static get properties() {
@@ -88,7 +91,7 @@ const CompostPropertiesMixin = (parent) => {
     }
 
     set(propName, value) {
-      const oldValue = this._props[propName];
+      let oldValue = this._props[propName];
 
       switch (this.constructor.properties[propName].type) {
         case Number:
@@ -129,9 +132,50 @@ const CompostPropertiesMixin = (parent) => {
         }
 
         if (this.constructor.properties[propName].observer) {
-          // requestAnimationFrame(() => {
-          this[this.constructor.properties[propName].observer](oldValue, this[propName]);
-          // });
+          if (!setStack[stackIndex]) {
+            setStack[stackIndex] = {
+              items: [],
+              scheduled: false,
+            };
+          }
+
+          const existingItemIndex = setStack[stackIndex].items.findIndex((item) => {
+            return item.component === this && item.propName === propName;
+          });
+
+          if (existingItemIndex > -1) {
+            const existingItem = setStack[stackIndex].items[existingItemIndex];
+            setStack[stackIndex].items.splice(existingItemIndex, 1);
+            oldValue = existingItem.oldValue;
+          }
+
+          setStack[stackIndex].items.push({
+            component: this,
+            propName,
+            observer: this.constructor.properties[propName].observer,
+            oldValue,
+            newValue: this[propName],
+          });
+
+          if (!setStack[stackIndex].scheduled) {
+            setStack[stackIndex].scheduled = true;
+
+            requestAnimationFrame(() => {
+              const thisStackIndex = stackIndex;
+              stackIndex += 1;
+
+              // console.log('rAF stack start', thisStackIndex);
+              setStack[thisStackIndex].items.forEach((item) => {
+                if (item.oldValue !== item.newValue) {
+                  // console.log(item.component.constructor.name, item.propName, item.oldValue, item.newValue);
+                  item.component[item.observer](item.oldValue, item.newValue);
+                }
+              });
+
+              setStack[thisStackIndex] = null;
+              // console.log('rAF stack end', thisStackIndex);
+            });
+          }
         }
       }
     }
