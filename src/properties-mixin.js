@@ -1,4 +1,4 @@
-let setStack = {};
+let setStack = [];
 let stackIndex = 0;
 
 const CompostPropertiesMixin = (parent) => {
@@ -133,23 +133,23 @@ const CompostPropertiesMixin = (parent) => {
 
         if (this.constructor.properties[propName].observer) {
           if (!setStack[stackIndex]) {
-            setStack[stackIndex] = {
+            setStack.unshift({
               items: [],
               scheduled: false,
-            };
+            });
           }
 
-          const existingItemIndex = setStack[stackIndex].items.findIndex((item) => {
+          const existingItemIndex = setStack[0].items.findIndex((item) => {
             return item.component === this && item.propName === propName;
           });
 
           if (existingItemIndex > -1) {
-            const existingItem = setStack[stackIndex].items[existingItemIndex];
-            setStack[stackIndex].items.splice(existingItemIndex, 1);
+            const existingItem = setStack[0].items[existingItemIndex];
+            setStack[0].items.splice(existingItemIndex, 1);
             oldValue = existingItem.oldValue;
           }
 
-          setStack[stackIndex].items.push({
+          setStack[0].items.unshift({
             component: this,
             propName,
             observer: this.constructor.properties[propName].observer,
@@ -157,29 +157,57 @@ const CompostPropertiesMixin = (parent) => {
             newValue: this[propName],
           });
 
-          if (!setStack[stackIndex].scheduled) {
-            setStack[stackIndex].scheduled = true;
+          if (!setStack[0].scheduled) {
+            setStack[0].scheduled = true;
 
-            requestAnimationFrame(() => {
-              const thisStackIndex = stackIndex;
-              stackIndex += 1;
-
-              // console.log('rAF stack start', thisStackIndex);
-              setStack[thisStackIndex].items.forEach((item) => {
-                if (item.oldValue !== item.newValue) {
-                  // console.log(item.component.constructor.name, item.propName, item.oldValue, item.newValue);
-                  item.component[item.observer](item.oldValue, item.newValue);
-                }
-              });
-
-              setStack[thisStackIndex] = null;
-              // console.log('rAF stack end', thisStackIndex);
-            });
+            if (!loopRunning) {
+              requestAnimationFrame(loop);
+            }
           }
         }
       }
     }
   }
 };
+
+const itemsPerLoop = 1;
+let loopRunning = false;
+
+const loop = (t) => {
+  loopRunning = true;
+
+  if (setStack.length) {
+    const index = setStack.length - 1;
+    const currentStack = setStack[index];
+
+    let item = currentStack.items.pop();
+    let count = 0;
+    while (item) {
+      if (item.oldValue !== item.newValue) {
+        // console.log(item.component.constructor.name, item.propName, item.oldValue, item.newValue);
+        item.component[item.observer](item.oldValue, item.newValue);
+      }
+
+      if (count < 2) {
+        item = currentStack.items.pop();
+        count += 1;
+      } else {
+        item = false;
+      }
+    }
+
+    if (currentStack.items.length === 0) {
+      setStack.pop();
+    }
+  };
+
+  if (setStack.length) {
+    requestAnimationFrame(loop);
+  } else {
+    loopRunning = false;
+  }
+};
+
+// requestAnimationFrame(loop);
 
 export default CompostPropertiesMixin;
