@@ -12,8 +12,8 @@ const CompostShadowMixin = (parent) => {
       let instance
       let template;
 
-      if (templateCache[this.constructor.name]) {
-        template = templateCache[this.constructor.name];
+      if (templateCache[this.tagName]) {
+        template = templateCache[this.tagName];
       } else {
         const templateString = this.render();
         template = document.createElement('template');
@@ -24,7 +24,7 @@ const CompostShadowMixin = (parent) => {
           window.ShadyCSS.styleElement(this);
         }
 
-        templateCache[this.constructor.name] = template;
+        templateCache[this.tagName] = template;
       }
 
       instance = template.content.cloneNode(true);
@@ -32,7 +32,7 @@ const CompostShadowMixin = (parent) => {
       this.shadowRoot.appendChild(instance);
     }
 
-    invalidate() {}
+    invalidate() { }
   }
 }
 
