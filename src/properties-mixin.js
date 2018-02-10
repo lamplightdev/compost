@@ -1,25 +1,5 @@
 const setStack = [];
 
-window.requestIdleCallback =
-  window.requestIdleCallback ||
-  function (cb) {
-    var start = Date.now();
-    return setTimeout(function () {
-      cb({
-        didTimeout: false,
-        timeRemaining: function () {
-          return Math.max(0, 50 - (Date.now() - start));
-        }
-      });
-    }, 1);
-  }
-
-window.cancelIdleCallback =
-  window.cancelIdleCallback ||
-  function (id) {
-    clearTimeout(id);
-  }
-
 const CompostPropertiesMixin = (parent) => {
   return class extends parent {
     static get properties() {
@@ -171,7 +151,11 @@ const CompostPropertiesMixin = (parent) => {
 
           if (loopPaused) {
             Promise.resolve().then(() => {
-              requestIdleCallback(loopSetStack);
+              if (loopPaused) {
+                loopPaused = false;
+                // requestIdleCallback(loopSetStack);
+                runLoop();
+              }
             });
           }
         }
@@ -181,6 +165,24 @@ const CompostPropertiesMixin = (parent) => {
 };
 
 let loopPaused = true;
+
+const runLoop = (deadline) => {
+  loopPaused = false;
+
+  while (setStack.length > 0) {
+    const item = setStack.pop();
+
+    if (item.oldValue !== item.newValue) {
+      item.component[item.observer](item.oldValue, item.newValue);
+    }
+  }
+
+  if (setStack.length > 0) {
+    runLoop();
+  } else {
+    loopPaused = true;
+  }
+}
 
 const loopSetStack = (deadline) => {
   loopPaused = false;
