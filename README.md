@@ -221,9 +221,13 @@ this.dispatchEvent(new CustomEvent(type, {
     render() {
       return super.render(`
         <h1>Repeater<h1>
-      `, `
-        <button></button>
       `);
+    }
+
+    getTemplateString(value, index) {
+      return `
+        <button></button>
+      `;
     }
 
     getKey(value, index) {
@@ -242,7 +246,7 @@ this.dispatchEvent(new CustomEvent(type, {
 </script>
 ```
 
-The first argument to `render` is anything that needs to be in the element's shadow DOM (which is not repeated.) The second argument is the DOM  that needs to be repeated and is combined with the `items` array property to stamp out new elements in the light DOM. So the above will output a custom element with `<h1>Repeater</h1>` in the shadow DOM, and the following in a `slot`:
+The call to `render` returns a template string for anything that needs to appear above the repeated template and will be added to the element's shadow DOM. The call to `getTemplateString` returns a template string that contains the DOM  that needs to be repeated and is combined with the `items` array property to stamp out new elements in the light DOM. So the above will output a custom element with `<h1>Repeater</h1>` in the shadow DOM, and the following in a `slot`:
 
 ```html
 <button>one</button>

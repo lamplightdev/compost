@@ -1,3 +1,4 @@
+const templateCache = {};
 
 const CompostRepeatMixin = (parent) => {
   return class extends parent {
@@ -11,22 +12,40 @@ const CompostRepeatMixin = (parent) => {
       };
     }
 
-    render(staticTemplateString, repeatTemplateString) {
+    render(staticTemplateString) {
       return `
         ${staticTemplateString}
-        <template>${repeatTemplateString}</template>
         <slot></slot>
       `;
+    }
+
+    getTemplateString(value, index) {
+      return '<div></div>';
+    }
+
+    createTemplate(templateString) {
+      const template = document.createElement('template');
+      template.innerHTML = templateString;
+
+      return template;
     }
 
     getKey(value, index) {
       return index;
     }
 
-    updateItem(el, value, index) {}
+    updateItem(el, value, index) { }
 
     _createItem(value, index) {
-      const template = this.$('template');
+      const templateString = this.getTemplateString(value, index);
+      let template;
+
+      if (templateCache[templateString]) {
+        template = templateCache[templateString];
+      } else {
+        template = this.createTemplate(templateString);
+        templateCache[templateString] = template;
+      }
 
       const instance = template.content.cloneNode(true);
 
