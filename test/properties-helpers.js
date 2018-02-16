@@ -3,7 +3,7 @@ export const canSetDefaultProperties = (context, done) => {
 
   const el = document.getElementById('test');
 
-  requestAnimationFrame(() => {
+  Promise.resolve().then(() => {
     expect(el.username).toBe(el.constructor.properties.username.value);
     expect(el.signinAttempts).toBe(el.constructor.properties.signinAttempts.value);
     expect(el.valid).toBe(el.constructor.properties.valid.value);
@@ -26,7 +26,7 @@ export const canSetStringProperty = (context, done, append = true) => {
   const attrName = el.constructor.propertyNameToAttributeName(context.propName);
   const observerName = el.constructor.properties[context.propName].observer;
 
-  requestAnimationFrame(() => {
+  Promise.resolve().then(() => {
     expect(el[context.propName]).toBe(context.value);
     expect(el.getAttribute(attrName)).toBe(context.value);
     expect(el[observerName].calls.count()).toBe(1);
@@ -47,7 +47,7 @@ export const canSetNumberProperty = (context, done, append = true) => {
   const attrName = el.constructor.propertyNameToAttributeName(context.propName);
   const observerName = el.constructor.properties[context.propName].observer;
 
-  requestAnimationFrame(() => {
+  Promise.resolve().then(() => {
     expect(el[context.propName]).toBe(context.value);
     expect(el.getAttribute(attrName)).toBe(`${context.value}`);
     expect(el[observerName].calls.count()).toBe(1);
@@ -68,7 +68,7 @@ export const canSetBooleanProperty = (context, done, append = true) => {
   const attrName = el.constructor.propertyNameToAttributeName(context.propName);
   const observerName = el.constructor.properties[context.propName].observer;
 
-  requestAnimationFrame(() => {
+  Promise.resolve().then(() => {
     expect(el[context.propName]).toBe(context.value);
     expect(el.hasAttribute(attrName)).toBe(context.value);
     expect(el[observerName].calls.count()).toBe(1);
@@ -89,7 +89,7 @@ export const canSetArrayProperty = (context, done, append = true) => {
   const attrName = el.constructor.propertyNameToAttributeName(context.propName);
   const observerName = el.constructor.properties[context.propName].observer;
 
-  requestAnimationFrame(() => {
+  Promise.resolve().then(() => {
     expect(el[context.propName]).toBe(context.value);
     expect(el.getAttribute(attrName)).toBe(JSON.stringify(context.value));
     expect(el[observerName].calls.count()).toBe(1);
@@ -110,7 +110,7 @@ export const canSetObjectProperty = (context, done, append = true) => {
   const attrName = el.constructor.propertyNameToAttributeName(context.propName);
   const observerName = el.constructor.properties[context.propName].observer;
 
-  requestAnimationFrame(() => {
+  Promise.resolve().then(() => {
     expect(el[context.propName]).toBe(context.value);
     expect(el.getAttribute(attrName)).toBe(JSON.stringify(context.value));
     expect(el[observerName].calls.count()).toBe(1);
@@ -129,7 +129,7 @@ export const canSetStringPropertyFromAttribute = (context, done) => {
 
   const observerName = el.constructor.properties[context.propName].observer;
 
-  requestAnimationFrame(() => {
+  Promise.resolve().then(() => {
     expect(el[context.propName]).toBe(context.value);
     expect(el.getAttribute(attrName)).toBe(context.value);
     expect(el[observerName].calls.count()).toBe(1);
@@ -148,7 +148,7 @@ export const canSetNumberPropertyFromAttribute = (context, done) => {
 
   const observerName = el.constructor.properties[context.propName].observer;
 
-  requestAnimationFrame(() => {
+  Promise.resolve().then(() => {
     expect(el[context.propName]).toBe(context.value);
     expect(el.getAttribute(attrName)).toBe(`${context.value}`);
     expect(el[observerName].calls.count()).toBe(1);
@@ -171,7 +171,7 @@ export const canSetBooleanPropertyFromAttribute = (context, done) => {
 
   const observerName = el.constructor.properties[context.propName].observer;
 
-  requestAnimationFrame(() => {
+  Promise.resolve().then(() => {
     expect(el[context.propName]).toBe(context.value);
     expect(el.hasAttribute(attrName)).toBe(context.value);
     expect(el[observerName].calls.count()).toBe(1);
@@ -190,7 +190,7 @@ export const canSetArrayPropertyFromAttribute = (context, done) => {
 
   const observerName = el.constructor.properties[context.propName].observer;
 
-  requestAnimationFrame(() => {
+  Promise.resolve().then(() => {
     expect(el[context.propName]).toEqual(context.value);
     expect(el.getAttribute(attrName)).toBe(JSON.stringify(context.value));
     expect(el[observerName].calls.count()).toBe(1);
@@ -209,7 +209,7 @@ export const canSetObjectPropertyFromAttribute = (context, done) => {
 
   const observerName = el.constructor.properties[context.propName].observer;
 
-  requestAnimationFrame(() => {
+  Promise.resolve().then(() => {
     expect(el[context.propName]).toEqual(context.value);
     expect(el.getAttribute(attrName)).toBe(JSON.stringify(context.value));
     expect(el[observerName].calls.count()).toBe(1);

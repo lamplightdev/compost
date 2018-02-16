@@ -8,7 +8,7 @@ export default function() {
 
       this.testEl = document.getElementById('test');
 
-      requestAnimationFrame(() => {
+      Promise.resolve().then(() => {
         spyOn(this.customEl.prototype, 'observeUsername');
         spyOn(this.customEl.prototype, 'observeSigninAttempts');
         spyOn(this.customEl.prototype, 'observeValid');
@@ -42,7 +42,7 @@ export default function() {
       const attrName = el.constructor.propertyNameToAttributeName(this.propName);
       const observerName = el.constructor.properties[this.propName].observer;
 
-      requestAnimationFrame(() => {
+      Promise.resolve().then(() => {
         expect(el[this.propName]).toBe(this.value);
         expect(el.getAttribute(attrName)).toBe(this.value);
         expect(el[observerName].calls.count()).toBe(0);

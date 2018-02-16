@@ -141,7 +141,7 @@ export default function () {
 
         const el = document.getElementById('test');
 
-        requestAnimationFrame(() => {
+        Promise.resolve().then(() => {
           expect(el[propName]).toBe(value);
           expect(el.getAttribute(attrName)).toBe(value);
           expect(el[observerName].calls.count()).toBe(1);
@@ -162,7 +162,7 @@ export default function () {
 
         const el = document.getElementById('test');
 
-        requestAnimationFrame(() => {
+        Promise.resolve().then(() => {
           expect(el[propName]).toBe(value);
           expect(el.getAttribute(attrName)).toBe(`${value}`);
           expect(el[observerName].calls.count()).toBe(1);
@@ -183,7 +183,7 @@ export default function () {
 
         const el = document.getElementById('test');
 
-        requestAnimationFrame(() => {
+        Promise.resolve().then(() => {
           expect(el[propName]).toBe(value);
           expect(el.hasAttribute(attrName)).toBe(value);
           expect(el[observerName].calls.count()).toBe(1);
@@ -204,7 +204,7 @@ export default function () {
 
         const el = document.getElementById('test');
 
-        requestAnimationFrame(() => {
+        Promise.resolve().then(() => {
           expect(el[propName]).toEqual(value);
           expect(el.getAttribute(attrName)).toBe(JSON.stringify(value));
           expect(el[observerName].calls.count()).toBe(1);
@@ -225,7 +225,7 @@ export default function () {
 
         const el = document.getElementById('test');
 
-        requestAnimationFrame(() => {
+        Promise.resolve().then(() => {
           expect(el[propName]).toEqual(value);
           expect(el.getAttribute(attrName)).toBe(JSON.stringify(value));
           expect(el[observerName].calls.count()).toBe(1);
