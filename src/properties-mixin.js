@@ -255,7 +255,7 @@ const CompostPropertiesMixin = parent => (
           }
 
           // put the observer on the stack to call later
-          setStack.unshft({
+          setStack.unshift({
             component: this,
             propName,
             observer: this.constructor.properties[propName].observer,
