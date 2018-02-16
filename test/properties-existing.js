@@ -1,6 +1,9 @@
+/* eslint prefer-arrow-callback: "off" */
+/* eslint func-names: "off" */
+
 import * as Helpers from './properties-helpers';
 
-export default function() {
+export default function () {
   describe('when element exists in DOM', function () {
     beforeEach(function (done) {
       const str = `<${this.elName} id="test"></${this.elName}>`;
@@ -9,11 +12,11 @@ export default function() {
       this.testEl = document.getElementById('test');
 
       Promise.resolve().then(() => {
-        spyOn(this.customEl.prototype, 'observeUsername');
-        spyOn(this.customEl.prototype, 'observeSigninAttempts');
-        spyOn(this.customEl.prototype, 'observeValid');
-        spyOn(this.customEl.prototype, 'observeItems');
-        spyOn(this.customEl.prototype, 'observeInfo');
+        spyOn(this.CustomEl.prototype, 'observeUsername');
+        spyOn(this.CustomEl.prototype, 'observeSigninAttempts');
+        spyOn(this.CustomEl.prototype, 'observeValid');
+        spyOn(this.CustomEl.prototype, 'observeItems');
+        spyOn(this.CustomEl.prototype, 'observeInfo');
 
         done();
       });
@@ -122,4 +125,4 @@ export default function() {
       Helpers.canSetObjectPropertyFromAttribute(this, done);
     });
   });
-};
+}

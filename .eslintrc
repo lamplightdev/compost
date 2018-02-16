@@ -1,0 +1,21 @@
+{
+  "extends": "airbnb-base",
+  "env": {
+    "browser": true,
+    "jasmine": true,
+    "node": false
+  },
+  "rules": {
+    "import/extensions": "always",
+    "class-methods-use-this": ["off"],
+    "prefer-destructuring": ["off"],
+    "no-underscore-dangle": [
+      "error",
+      {
+        "allowAfterThis": true
+      }
+    ]
+  },
+  "globals": {
+  }
+}

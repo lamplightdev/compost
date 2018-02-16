@@ -2,14 +2,13 @@ import CompostShadowBaseMixin from './shadow-base-mixin.js';
 
 const templateCache = {};
 
-const CompostShadowMixin = (parent) => {
-  return class extends CompostShadowBaseMixin(parent) {
+const CompostShadowMixin = parent => (
+  class extends CompostShadowBaseMixin(parent) {
     render() {
       return '';
     }
 
     initialRender() {
-      let instance
       let template;
 
       if (templateCache[this.tagName]) {
@@ -27,13 +26,13 @@ const CompostShadowMixin = (parent) => {
         templateCache[this.tagName] = template;
       }
 
-      instance = template.content.cloneNode(true);
+      const instance = template.content.cloneNode(true);
 
       this.shadowRoot.appendChild(instance);
     }
 
     invalidate() { }
   }
-}
+);
 
 export default CompostShadowMixin;

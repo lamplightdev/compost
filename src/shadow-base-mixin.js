@@ -1,5 +1,5 @@
-const CompostShadowBaseMixin = (parent) => {
-  return class extends parent {
+const CompostShadowBaseMixin = parent => (
+  class extends parent {
     constructor() {
       super();
 
@@ -20,6 +20,6 @@ const CompostShadowBaseMixin = (parent) => {
     initialRender() {}
     invalidate() {}
   }
-};
+);
 
 export default CompostShadowBaseMixin;

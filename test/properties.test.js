@@ -1,4 +1,7 @@
 
+/* eslint prefer-arrow-callback: "off" */
+/* eslint func-names: "off" */
+
 import CompostPropertiesMixin from '../src/properties-mixin';
 
 import creatingTests from './properties-creating';
@@ -38,7 +41,7 @@ const propertyGroups = [{
     value: null,
     observer: 'observeInfo',
     reflectToAttribute: true,
-  }
+  },
 }, {
   username: {
     type: String,
@@ -77,28 +80,29 @@ const propertyGroups = [{
     },
     observer: 'observeInfo',
     reflectToAttribute: true,
-  }
+  },
 }];
 
 propertyGroups.forEach((propertyGroup, groupIndex) => {
   const elName = `compost-element${groupIndex}`;
-  const customEl = class CompostElement extends CompostPropertiesMixin(HTMLElement) {
+  const CustomEl = class CompostElement extends CompostPropertiesMixin(HTMLElement) {
     static get properties() {
       return propertyGroup;
     }
 
-    observeUsername(oldValue, newValue) { }
-    observeSigninAttempts(oldValue, newValue) { }
-    observeValid(oldValue, newValue) { }
-    observeItems(oldValue, newValue) { }
-    observeInfo(oldValue, newValue) { }
-  }
-  customElements.define(elName, customEl);
+    observeUsername() { }
+    observeSigninAttempts() { }
+    observeValid() { }
+    observeItems() { }
+    observeInfo() { }
+  };
 
-  describe(`with propertyGroup ${groupIndex}`, function() {
+  customElements.define(elName, CustomEl);
+
+  describe(`with propertyGroup ${groupIndex}`, function () {
     beforeEach(function () {
       this.elName = elName;
-      this.customEl = customEl;
+      this.CustomEl = CustomEl;
 
       this.appEl = document.createElement('div');
       this.appEl.id = 'app';

@@ -1,3 +1,5 @@
+/* eslint no-param-reassign: "off" */
+
 export const canSetDefaultProperties = (context, done) => {
   context.appEl.appendChild(context.testEl);
 

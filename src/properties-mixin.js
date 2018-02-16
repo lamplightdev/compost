@@ -1,7 +1,27 @@
 const setStack = [];
 
-const CompostPropertiesMixin = (parent) => {
-  return class extends parent {
+let loopPaused = true;
+
+const runLoop = () => {
+  loopPaused = false;
+
+  while (setStack.length > 0) {
+    const item = setStack.pop();
+
+    if (item.oldValue !== item.newValue) {
+      item.component[item.observer](item.oldValue, item.newValue);
+    }
+  }
+
+  if (setStack.length > 0) {
+    runLoop();
+  } else {
+    loopPaused = true;
+  }
+};
+
+const CompostPropertiesMixin = parent => (
+  class extends parent {
     static get properties() {
       return {};
     }
@@ -41,13 +61,13 @@ const CompostPropertiesMixin = (parent) => {
         Object.keys(this.constructor.properties).forEach((propName) => {
           const attributeName = this._propsToAttrs[propName];
 
-          const initialValue = this.hasOwnProperty(propName)
+          const initialValue = Object.prototype.hasOwnProperty.call(this, propName)
             ? this[propName] : this.constructor.properties[propName].value;
 
           delete this[propName];
 
           Object.defineProperty(this, propName, {
-            get: () => { return this._props[propName]; },
+            get: () => this._props[propName],
             set: (value) => { this.set(propName, value); },
           });
 
@@ -75,7 +95,7 @@ const CompostPropertiesMixin = (parent) => {
             this[propName] = Number(newValue);
             break;
           case Boolean:
-            this[propName] = newValue === null ? false : true;
+            this[propName] = newValue !== null;
             break;
           case Array: case Object:
             this[propName] = JSON.parse(newValue);
@@ -108,14 +128,13 @@ const CompostPropertiesMixin = (parent) => {
           if (this[propName] === null) {
             this.removeAttribute(attributeName);
           } else {
-
             switch (this.constructor.properties[propName].type) {
               case Boolean:
                 if (this[propName]) {
                   this._ignoreNextAttributeChange[attributeName] = true;
                   this.setAttribute(attributeName, '');
                 } else {
-                  this.removeAttribute(attributeName)
+                  this.removeAttribute(attributeName);
                 }
                 break;
               case Array: case Object:
@@ -131,9 +150,9 @@ const CompostPropertiesMixin = (parent) => {
         }
 
         if (this.constructor.properties[propName].observer) {
-          const existingItemIndex = setStack.findIndex((item) => {
-            return item.component === this && item.propName === propName;
-          });
+          const existingItemIndex = setStack.findIndex(item => (
+            item.component === this && item.propName === propName
+          ));
 
           if (existingItemIndex > -1) {
             const existingItem = setStack[existingItemIndex];
@@ -162,44 +181,6 @@ const CompostPropertiesMixin = (parent) => {
       }
     }
   }
-};
-
-let loopPaused = true;
-
-const runLoop = (deadline) => {
-  loopPaused = false;
-
-  while (setStack.length > 0) {
-    const item = setStack.pop();
-
-    if (item.oldValue !== item.newValue) {
-      item.component[item.observer](item.oldValue, item.newValue);
-    }
-  }
-
-  if (setStack.length > 0) {
-    runLoop();
-  } else {
-    loopPaused = true;
-  }
-}
-
-const loopSetStack = (deadline) => {
-  loopPaused = false;
-
-  while (deadline.timeRemaining() > 0 && setStack.length > 0) {
-    const item = setStack.pop();
-
-    if (item.oldValue !== item.newValue) {
-      item.component[item.observer](item.oldValue, item.newValue);
-    }
-  }
-
-  if (setStack.length > 0) {
-    requestIdleCallback(loopSetStack);
-  } else {
-    loopPaused = true;
-  }
-}
+);
 
 export default CompostPropertiesMixin;

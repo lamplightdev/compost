@@ -1,7 +1,7 @@
 const templateCache = {};
 
-const CompostRepeatMixin = (parent) => {
-  return class extends parent {
+const CompostRepeatMixin = parent => (
+  class extends parent {
     static get properties() {
       return {
         items: {
@@ -19,9 +19,11 @@ const CompostRepeatMixin = (parent) => {
       `;
     }
 
+    /*
     getTemplateString(value, index) {
       return '<div></div>';
     }
+    */
 
     createTemplate(templateString) {
       const template = document.createElement('template');
@@ -34,7 +36,9 @@ const CompostRepeatMixin = (parent) => {
       return index;
     }
 
-    updateItem(el, value, index) { }
+    /*
+    updateItem(el, value, index) {}
+    */
 
     _createItem(value, index) {
       const templateString = this.getTemplateString(value, index);
@@ -60,18 +64,18 @@ const CompostRepeatMixin = (parent) => {
     observeItems(oldValues, values) {
       let existingElements = this.$('slot').assignedNodes();
 
-      const keyedValues = values.map((value, index) => {
-        return Object.assign({}, value, {
+      const keyedValues = values.map((value, index) => (
+        Object.assign({}, value, {
           key: this.getKey(value, index),
-        });
-      });
+        })
+      ));
 
       const newKeys = keyedValues.map(value => value.key);
       const existingKeys = existingElements.map(el => el.key);
 
       existingKeys.forEach((existingKey) => {
         if (newKeys.indexOf(existingKey) === -1) {
-          const el = existingElements.find(el => el.key === existingKey);
+          const el = existingElements.find(existingEl => existingEl.key === existingKey);
           this.removeChild(el);
         }
       });
@@ -88,7 +92,7 @@ const CompostRepeatMixin = (parent) => {
         if (existingKeys.indexOf(newKey) === -1) {
           el = this._createItem(values[index], index);
         } else {
-          el = existingElements.find(el => el.key === newKey);
+          el = existingElements.find(existingEl => existingEl.key === newKey);
         }
 
         orderedElements.push(el);
@@ -119,6 +123,6 @@ const CompostRepeatMixin = (parent) => {
       });
     }
   }
-};
+);
 
 export default CompostRepeatMixin;
