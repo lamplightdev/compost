@@ -50,7 +50,7 @@ Let's you add declarative event binding in your templates. Also adds some conven
 
 ### CompostRepeatMixin
 
-Stamps out a template for each object in the `items` array property
+Experimental - Stamps out a template for each object in the `items` array property
 
 ### CompostMixin
 
