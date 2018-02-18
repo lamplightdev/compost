@@ -124,5 +124,50 @@ export default function () {
       this.previousValue = this.testEl.constructor.properties.info.value;
       Helpers.canSetObjectPropertyFromAttribute(this, done);
     });
+
+    it('doesn\'t call an observer if value is changed back in same task', function (done) {
+      const propName = 'username';
+
+      const el = document.getElementById('test');
+
+      const existingValue = el[propName];
+
+      el[propName] = 'newusername';
+      el[propName] = existingValue;
+
+      const observerName = el.constructor.properties[propName].observer;
+
+      Promise.resolve().then(() => {
+        expect(el[propName]).toBe(existingValue);
+        expect(el[observerName].calls.count()).toBe(0);
+
+        done();
+      });
+    });
+
+
+    it('only calls an observer once if value is changed multiple times in same task', function (done) {
+      const propName = 'username';
+      const toValue = 'finalvalue';
+
+      const el = document.getElementById('test');
+
+      const existingValue = el[propName];
+
+      el[propName] = 'newusername';
+      el[propName] = 'test';
+      el[propName] = existingValue;
+      el[propName] = toValue;
+
+      const observerName = el.constructor.properties[propName].observer;
+
+      Promise.resolve().then(() => {
+        expect(el[propName]).toBe(toValue);
+        expect(el[observerName].calls.count()).toBe(1);
+        expect(el[observerName]).toHaveBeenCalledWith(existingValue, toValue);
+
+        done();
+      });
+    });
   });
 }
