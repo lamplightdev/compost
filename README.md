@@ -17,6 +17,8 @@
 - **Include only what you need** - take it or leave it
 - **Cross browser** - works on all modern browsers and IE11
 
+Example Hacker News progressive web app - [https://github.com/lamplightdev/compost-hn](https://github.com/lamplightdev/compost-hn)
+
 ## Table of Contents
 
 - [Install](#install)
@@ -266,7 +268,7 @@ Works with other browsers down to IE11 when using the [web components polyfills]
 
 ## Examples
 
-[HackerNew Progressive Web App](https://compost-hn.netlify.com) -  built using compost
+[HackerNew Progressive Web App](https://github.com/lamplightdev/compost-hn) -  built using compost
 
 Coming soon - an example using lit-html.
 
