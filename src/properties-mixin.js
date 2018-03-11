@@ -30,6 +30,14 @@ const runLoop = () => {
     // (the value may have been set multiple times)
     if (item.oldValue !== item.newValue) {
       item.component[item.observer](item.oldValue, item.newValue);
+
+      const multiObservers = item.component.constructor.multiObservers || {};
+      Object.keys(multiObservers).forEach((observerName) => {
+        const props = multiObservers[observerName];
+        if (!props.some(prop => typeof item.component[prop] === 'undefined')) {
+          item.component[observerName](...props.map(prop => item.component[prop]));
+        }
+      });
     }
   }
 
