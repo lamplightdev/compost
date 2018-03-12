@@ -34,7 +34,8 @@ const runLoop = () => {
       const multiObservers = item.component.constructor.multiObservers || {};
       Object.keys(multiObservers).forEach((observerName) => {
         const props = multiObservers[observerName];
-        if (!props.some(prop => typeof item.component[prop] === 'undefined')) {
+        if (props.includes(item.propName)
+          && !props.some(prop => typeof item.component[prop] === 'undefined')) {
           item.component[observerName](...props.map(prop => item.component[prop]));
         }
       });
