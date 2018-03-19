@@ -20,11 +20,12 @@ const CompostRepeatMixin = parent => (
       };
     }
 
-    render(staticTemplateString) {
+    render(staticTemplateString, staticPostTemplateString = '') {
       // the elements will be added to the light DOM (slot)
       return `
         ${staticTemplateString}
         <slot></slot>
+        ${staticPostTemplateString}
       `;
     }
 
