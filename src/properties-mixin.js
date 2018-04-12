@@ -23,6 +23,8 @@ let loopPaused = true;
 const runLoop = () => {
   loopPaused = false;
 
+  const multiObserversToCall = [];
+
   while (setStack.length > 0) {
     const item = setStack.pop();
 
@@ -31,18 +33,47 @@ const runLoop = () => {
     if (item.oldValue !== item.newValue) {
       item.component[item.observer](item.oldValue, item.newValue);
 
-      const multiObservers = item.component.constructor.multiObservers || {};
-      Object.keys(multiObservers).forEach((observerName) => {
-        const props = multiObservers[observerName];
-        if (props.includes(item.propName)
-          && !props.some(prop => typeof item.component[prop] === 'undefined')) {
-          item.component[observerName](...props.map(prop => item.component[prop]));
-        }
-      });
+      if (item.component.constructor.multiObservers) {
+        const multiObservers = item.component.constructor.multiObservers;
+
+        Object.keys(multiObservers).forEach((observerName) => {
+          const props = multiObservers[observerName];
+          if (props.includes(item.propName)
+            && !props.some(prop => typeof item.component[prop] === 'undefined')) {
+            let existingMultiObserverItemIndex = multiObserversToCall
+              .findIndex(multiCall => multiCall.component === item.component
+                && multiCall.observer === observerName);
+
+            if (existingMultiObserverItemIndex === -1) {
+              multiObserversToCall.push({
+                component: item.component,
+                observer: observerName,
+                items: [],
+              });
+
+              existingMultiObserverItemIndex = multiObserversToCall.length - 1;
+            }
+
+            multiObserversToCall[existingMultiObserverItemIndex].items
+              .push({
+                prop: item.propName,
+                oldValue: item.oldValue,
+                newValue: item.newValue,
+              });
+          }
+        });
+      }
     }
   }
 
-  loopPaused = true;
+  if (multiObserversToCall.length) {
+    multiObserversToCall.forEach((multiObserverInfo) => {
+      multiObserverInfo.component[multiObserverInfo.observer](...multiObserverInfo.items);
+    });
+    runLoop();
+  } else {
+    loopPaused = true;
+  }
 };
 
 const CompostPropertiesMixin = parent => (
