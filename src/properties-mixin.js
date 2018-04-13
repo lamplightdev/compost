@@ -68,7 +68,13 @@ const runLoop = () => {
 
   if (multiObserversToCall.length) {
     multiObserversToCall.forEach((multiObserverInfo) => {
-      multiObserverInfo.component[multiObserverInfo.observer](...multiObserverInfo.items);
+      multiObserverInfo.component[multiObserverInfo.observer]
+        (multiObserverInfo.items.reduce((all, current) => {
+          return {
+            ...all,
+            [current.prop]: current,
+          };
+        }, {}));
     });
     runLoop();
   } else {
